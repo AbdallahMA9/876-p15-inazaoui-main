@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
@@ -17,9 +18,6 @@ class User
     private ?int $id = null;
 
     #[ORM\Column]
-    private bool $admin = false;
-
-    #[ORM\Column]
     private ?string $name;
 
     #[ORM\Column(type: 'text', nullable: true)]
@@ -30,6 +28,12 @@ class User
 
     #[ORM\OneToMany(targetEntity: Media::class, mappedBy: 'user')]
     private Collection $medias;
+
+    #[ORM\Column(length: 255)]
+    private ?string $password = null;
+
+    #[ORM\Column(type: Types::ARRAY)]
+    private array $roles = [];
 
     public function __construct()
     {
@@ -83,13 +87,31 @@ class User
         $this->medias = $medias;
     }
 
-    public function isAdmin(): bool
+    public function getPassword(): ?string
     {
-        return $this->admin;
+        return $this->password;
     }
 
-    public function setAdmin(bool $admin): void
+    public function setPassword(string $password): static
     {
-        $this->admin = $admin;
+        $this->password = $password;
+
+        return $this;
     }
+
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
+    }
+    public function setRoles(array $roles): static
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
 }
