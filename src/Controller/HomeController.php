@@ -39,12 +39,12 @@ class HomeController extends AbstractController
     }
 
     #[Route('/portfolio/{id}', name: 'portfolio')]
-    public function portfolio(?int $id = null, UserRepository $userRepository, MediaRepository $mediaRepository, AlbumRepository $albumRepository)
+    public function portfolio(UserRepository $userRepository, MediaRepository $mediaRepository, AlbumRepository $albumRepository, ?int $id = null)
     {
         $albums = $albumRepository->findAll();
         $album = $id ? $albumRepository->find($id) : null;
         $user = $userRepository->findOneByAdmin(true);
-
+    
         $medias = $album
             ? $mediaRepository->findByAlbum($album)
             : $mediaRepository->findByUser($user);
@@ -54,6 +54,7 @@ class HomeController extends AbstractController
             'medias' => $medias
         ]);
     }
+    
 
     #[Route('/about', name: 'about')]
     public function about()
