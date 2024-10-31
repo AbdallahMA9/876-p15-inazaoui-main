@@ -23,7 +23,7 @@ class HomeController extends AbstractController
     #[Route('/guests', name: 'guests')]
     public function guests(UserRepository $userRepository)
     {
-        $allUsers = $userRepository->findAll();
+        $allUsers = $userRepository->findBy(['isAuthorized' => true]);
         $guests = array_filter($allUsers, function($user) {
             return !in_array('ROLE_ADMIN', $user->getRoles());
         });
