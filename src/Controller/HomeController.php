@@ -47,11 +47,15 @@ class HomeController extends AbstractController
     {
         $albums = $albumRepository->findAll();
         $album = $id ? $albumRepository->find($id) : null;
-        $user = $userRepository->findOneByAdmin(true);
     
+        // Récupère l'utilisateur connecté
+        $user = $this->getUser();
+    
+        // Vérifie si l'utilisateur est administrateur
         $medias = $album
             ? $mediaRepository->findByAlbum($album)
-            : $mediaRepository->findByUser($user);
+            : ($this->isGranted('ROLE_ADMIN') ? $mediaRepository->findByUser($user) : []);
+    
         return $this->render('front/portfolio.html.twig', [
             'albums' => $albums,
             'album' => $album,
