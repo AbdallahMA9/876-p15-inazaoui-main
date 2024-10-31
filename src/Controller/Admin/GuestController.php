@@ -2,12 +2,10 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\Album;
-use App\Entity\Media;
-use App\Entity\User;
-use App\Repository\AlbumRepository;
-use App\Repository\MediaRepository;
+
 use App\Repository\UserRepository;
+use App\Repository\MediaRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -46,6 +44,38 @@ class GuestController extends AbstractController
                 'totalPages' => $totalPages
             ]
         );
+    }
+
+    #[Route('/admin/guest/disable/{id}', name: 'admin_guest_disable')]
+    public function disable(Request $request, int $id, UserRepository $userRepository, EntityManagerInterface $em)
+    {
+        $user = $userRepository->find($id);
+        $user->setAuthorized(false);
+
+        $em->flush();
+
+        return $this->redirectToRoute('admin_guest_index');
+    }
+
+    #[Route('/admin/guest/active/{id}', name: 'admin_guest_active')]
+    public function active(Request $request, int $id, UserRepository $userRepository, EntityManagerInterface $em)
+    {
+        $user = $userRepository->find($id);
+        $user->setAuthorized(true);
+
+        $em->flush();
+
+        return $this->redirectToRoute('admin_guest_index');
+    }
+
+    #[Route('/admin/guest/delete/{id}', name: 'admin_guest_delete')]
+    public function delete(int $id, UserRepository $userRepository, EntityManagerInterface $em)
+    {
+        $user = $userRepository->find($id);
+        $em->remove($user);
+        $em->flush();
+
+        return $this->redirectToRoute('admin_guest_index');
     }
     
 

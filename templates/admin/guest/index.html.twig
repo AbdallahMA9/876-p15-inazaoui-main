@@ -20,9 +20,8 @@
                     <td>{{guest.name}}</td>
                     <td>{% if guest.isAuthorized %}Autorisé{% else %}Bloqué{% endif %}</td>
                     <td>
-                    <a href="{{ path('admin_guest_update', {id: guest.id}) }}" class="btn btn-primary">Modifier</a>
-                    {% if guest.isAuthorized %}<a href="{{ path('admin_guest_active', {id: guest.id}) }}" class="btn btn-warning">Bloquer</a>
-                    {% else %}<a href="{{ path('admin_guest_disable', {id: guest.id}) }}" class="btn btn-warning">débloquer</a>{% endif %}
+                    {% if guest.isAuthorized %}<a href="{{ path('admin_guest_disable', {id: guest.id}) }}" class="btn btn-warning">Bloquer</a>
+                    {% else %}<a href="{{ path('admin_guest_active', {id: guest.id}) }}" class="btn btn-warning">débloquer</a>{% endif %}
                     <a href="{{ path('admin_guest_delete', {id: guest.id}) }}" class="btn btn-danger">Supprimer</a>
                     </td>
                 </tr>
