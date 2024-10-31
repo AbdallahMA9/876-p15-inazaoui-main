@@ -41,6 +41,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Media::class, mappedBy: 'user')]
     private Collection $medias;
 
+    #[ORM\Column]
+    private ?bool $isAuthorized = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -148,6 +151,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setMedias(Collection $medias): void
     {
         $this->medias = $medias;
+    }
+
+    public function isAuthorized(): ?bool
+    {
+        return $this->isAuthorized;
+    }
+
+    public function setAuthorized(bool $isAuthorized): static
+    {
+        $this->isAuthorized = $isAuthorized;
+
+        return $this;
     }
 
 }
