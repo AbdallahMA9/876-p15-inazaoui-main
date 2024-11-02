@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 class MediaTest extends TestCase
 {
-    public function testGetAndSetUser()
+    public function testGetAndSetUser(): void
     {
         $media = new Media();
         $user = new User();
@@ -17,21 +17,21 @@ class MediaTest extends TestCase
         $this->assertSame($user, $media->getUser());
     }
 
-    public function testGetAndSetPath()
+    public function testGetAndSetPath(): void
     {
         $media = new Media();
         $media->setPath('/uploads/image.jpg');
         $this->assertEquals('/uploads/image.jpg', $media->getPath());
     }
 
-    public function testGetAndSetTitle()
+    public function testGetAndSetTitle(): void
     {
         $media = new Media();
         $media->setTitle('Example Title');
         $this->assertEquals('Example Title', $media->getTitle());
     }
 
-    public function testGetAndSetAlbum()
+    public function testGetAndSetAlbum(): void
     {
         $media = new Media();
         $album = new Album();

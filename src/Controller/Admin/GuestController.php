@@ -9,12 +9,13 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Response;
 
 class GuestController extends AbstractController
 {
 
     #[Route('/admin/guest', name: 'admin_guest_index')]
-    public function index(Request $request, UserRepository $userRepository, MediaRepository $mediaRepository)
+    public function index(Request $request, UserRepository $userRepository, MediaRepository $mediaRepository): Response
     {
         // Récupérer tous les utilisateurs
         $allUsers = $userRepository->findAll();
@@ -47,7 +48,7 @@ class GuestController extends AbstractController
     }
 
     #[Route('/admin/guest/disable/{id}', name: 'admin_guest_disable')]
-    public function disable(Request $request, int $id, UserRepository $userRepository, EntityManagerInterface $em)
+    public function disable(Request $request, int $id, UserRepository $userRepository, EntityManagerInterface $em): Response
     {
         $user = $userRepository->find($id);
         $user->setAuthorized(false);
@@ -58,7 +59,7 @@ class GuestController extends AbstractController
     }
 
     #[Route('/admin/guest/active/{id}', name: 'admin_guest_active')]
-    public function active(Request $request, int $id, UserRepository $userRepository, EntityManagerInterface $em)
+    public function active(Request $request, int $id, UserRepository $userRepository, EntityManagerInterface $em): Response
     {
         $user = $userRepository->find($id);
         $user->setAuthorized(true);
@@ -69,7 +70,7 @@ class GuestController extends AbstractController
     }
 
     #[Route('/admin/guest/delete/{id}', name: 'admin_guest_delete')]
-    public function delete(int $id, UserRepository $userRepository, EntityManagerInterface $em)
+    public function delete(int $id, UserRepository $userRepository, EntityManagerInterface $em): Response
     {
         $user = $userRepository->find($id);
         $em->remove($user);

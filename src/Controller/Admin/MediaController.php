@@ -9,12 +9,13 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Response;
 
 
 class MediaController extends AbstractController
 {
     #[Route('/admin/media', name: 'admin_media_index')]
-    public function index(Request $request, MediaRepository $mediaRepository)
+    public function index(Request $request, MediaRepository $mediaRepository): Response
     {
         $page = $request->query->getInt('page', 1);
 
@@ -40,7 +41,7 @@ class MediaController extends AbstractController
     }
 
     #[Route('/admin/media/add', name: 'admin_media_add')]
-    public function add(Request $request, EntityManagerInterface $em)
+    public function add(Request $request, EntityManagerInterface $em): Response
     {
         $media = new Media();
         $form = $this->createForm(MediaType::class, $media, ['is_admin' => $this->isGranted('ROLE_ADMIN')]);
@@ -62,7 +63,7 @@ class MediaController extends AbstractController
     }
 
     #[Route('/admin/media/delete/{id}', name: 'admin_media_delete')]
-    public function delete(int $id ,MediaRepository $mediaRepository , EntityManagerInterface $em)
+    public function delete(int $id ,MediaRepository $mediaRepository , EntityManagerInterface $em): Response
     {
         $media = $mediaRepository->find($id);
         $em->remove($media);

@@ -7,7 +7,7 @@ use PHPUnit\Framework\TestCase;
 
 class AlbumTest extends TestCase
 {
-    public function testGetAndSetName()
+    public function testGetAndSetName(): void
     {
         $album = new Album();
         $album->setName('Album Name');

@@ -38,8 +38,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255)]
     private ?string $description = null;
 
-    #[ORM\OneToMany(targetEntity: Media::class, mappedBy: 'user')]
+    #[ORM\OneToMany(targetEntity: Media::class, mappedBy: 'user', cascade: ['remove'])]
     private Collection $medias;
+    
 
     #[ORM\Column]
     private ?bool $isAuthorized = null;
