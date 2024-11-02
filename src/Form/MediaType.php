@@ -24,7 +24,7 @@ class MediaType extends AbstractType
                 'required' => true,
                 'constraints' => [
                     new Assert\Image([
-                        'mimeTypes' => ['jpeg', 'png', 'jpg'],
+                        'mimeTypes' => ['image/jpeg', 'image/png', 'image/jpg'],
                         'maxSize' => '2M',
                         'maxSizeMessage' => 'Le fichier ne doit pas dépasser 2 Mo.'
                     ])
