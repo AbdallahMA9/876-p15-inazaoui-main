@@ -38,21 +38,25 @@ class HomeController extends AbstractController
     public function guest(int $id, UserRepository $userRepository): Response
     {
         $guest = $userRepository->find($id);
+    
+        // Vérifier si l'utilisateur existe et s'il est autorisé
+        if (!$guest || !$guest->isAuthorized()) {
+            throw $this->createNotFoundException("Cet utilisateur n'est pas autorisé ou n'existe pas.");
+        }
+    
         return $this->render('front/guest.html.twig', [
             'guest' => $guest
         ]);
     }
+    
 
     #[Route('/portfolio/{id}', name: 'portfolio')]
     public function portfolio(UserRepository $userRepository, MediaRepository $mediaRepository, AlbumRepository $albumRepository, ?int $id = null): Response
     {
         $albums = $albumRepository->findAll();
+
         $album = $id ? $albumRepository->find($id) : null;
-    
-        // Filtrer les médias en fonction de l'autorisation de l'utilisateur associé
-        $medias = $album
-            ? $mediaRepository->findByAlbum($album)
-            : $mediaRepository->findAll();
+        $medias = ($album) ? $mediaRepository->findBy(['album' => $album]) : $mediaRepository->findAll();
     
         // Exclure les médias dont l'utilisateur n'est pas autorisé
         $medias = array_filter($medias, function(Media $media) {

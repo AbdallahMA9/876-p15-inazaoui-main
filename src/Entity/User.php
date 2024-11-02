@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -38,12 +39,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255)]
     private ?string $description = null;
 
+    /**
+     * @var Collection<int, Media> Collection of Media entities associated with the user
+     */
     #[ORM\OneToMany(targetEntity: Media::class, mappedBy: 'user', cascade: ['remove'])]
     private Collection $medias;
     
-
     #[ORM\Column]
     private ?bool $isAuthorized = null;
+
+    public function __construct()
+    {
+        $this->medias = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -58,7 +66,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setEmail(string $email): static
     {
         $this->email = $email;
-
         return $this;
     }
 
@@ -92,7 +99,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setRoles(array $roles): static
     {
         $this->roles = $roles;
-
         return $this;
     }
 
@@ -107,7 +113,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPassword(string $password): static
     {
         $this->password = $password;
-
         return $this;
     }
 
@@ -116,8 +121,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function eraseCredentials(): void
     {
-        // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
+        // Clear any sensitive data here
     }
 
     public function getName(): ?string
@@ -128,7 +132,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setName(string $name): static
     {
         $this->name = $name;
-
         return $this;
     }
 
@@ -140,15 +143,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setDescription(string $description): static
     {
         $this->description = $description;
-
         return $this;
     }
 
+    /**
+     * @return Collection<int, Media>
+     */
     public function getMedias(): Collection
     {
         return $this->medias;
     }
 
+    /**
+     * @param Collection<int, Media> $medias
+     */
     public function setMedias(Collection $medias): void
     {
         $this->medias = $medias;
@@ -162,8 +170,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setAuthorized(bool $isAuthorized): static
     {
         $this->isAuthorized = $isAuthorized;
-
         return $this;
     }
-
 }
