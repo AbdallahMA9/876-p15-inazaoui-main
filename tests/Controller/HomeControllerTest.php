@@ -2,6 +2,7 @@
 
 namespace App\Tests\Controller;
 
+use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class HomeControllerTest extends WebTestCase
@@ -22,18 +23,29 @@ class HomeControllerTest extends WebTestCase
 
         $this->assertResponseIsSuccessful();  // Asserting the response is 200 OK
         $this->assertSelectorTextContains('h4', 'User 1');  // Adjust as necessary
+        
     }
 
     public function testGuestPageIsAccessible(): void
     {
         $client = static::createClient();
-
-        // Simulate a user that exists and is authorized
-        $client->request('GET', '/guest/1');  // Adjust the ID as necessary
-
-        $this->assertResponseIsSuccessful();  // Asserting the response is 200 OK
-        $this->assertSelectorTextContains('p', 'Description for User 1');  // Adjust as necessary
+    
+        $entityManager = $client->getContainer()->get('doctrine')->getManager();
+    
+        // Récupérer le guest avec l'email 'user1@example.com'
+        $guest = $entityManager->getRepository(User::class)->findOneBy(['email' => 'user1@example.com']);
+        
+        // Vérifie si l'utilisateur existe avant de faire la requête
+        $this->assertNotNull($guest, 'Le guest avec l\'email "user1@example.com" n\'existe pas.');
+    
+        // Simuler une requête GET pour afficher la page du guest
+        $client->request('GET', '/guest/' . $guest->getId());
+    
+        // Vérifie que la réponse est correcte
+        $this->assertResponseIsSuccessful();
+        $this->assertSelectorTextContains('p', 'Description for User 1');
     }
+    
 
     public function testPortfolioPageIsAccessible(): void
     {
